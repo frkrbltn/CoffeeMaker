@@ -1,0 +1,25 @@
+
+.row{
+	margin-right: 300px;
+}
+
+
+.customization_space{
+		background-color: #D9D9D9;
+		margin-top: -330px;
+		margin-left: 700px;
+		width: 400px;
+		height: 400px;
+}
+
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: red;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}

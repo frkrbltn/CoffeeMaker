@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Add a Recipe</title>
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css\logIn.css" />
+
+</head>
+
+
+
+<body>
+
+	<div id="header">
+		<h1>Coffee Maker</h1>
+	</div>
+
+
+	<div class="columns">
+
+
+		<div class="option-container" ng-app="myApp" ng-controller="logInCtrl as ctrl">
+			<form name="logInForm" th:action="@{/logIn}" method="post">
+				<h2>Log In</h2>
+				<div th:if="${param.error}" class="alert alert-error">
+					Invalid username and password.
+				</div>
+				<div th:if="${param.logout}" class="alert alert-success">
+					You have been logged out.
+				</div>
+				<div class="button-organizer">
+					<!-- username -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Username</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="name" name="username" class="textbox"
+									placeholder="Enter username" required="0" />
+							</div>
+						</div>
+					</div>
+
+					<!-- password -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file" align="center">Password</label>
+							<div class="col-md-7">
+								<input type="password" ng-model="password" name="password" class="textbox"
+									placeholder="Enter password" required="true" min="0" />
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class="button-cont2">
+					<input type="submit" value="Log In" class="default-button" ng-disabled="logInForm.$invalid"
+						ng-click="submit()" />
+					<!--<button type="button" ng-click="reset()" class="btn btn-warning btn-sm"
+								ng-disabled="logInForm.$pristine">Reset Form
+							</button>-->
+					<button class="newsignup-page"><a href="/signUp">New User? Sign Up</a></button>
+				</div>
+			</form>
+		</div>
+
+
+
+
+
+
+</body>
+
+</html>

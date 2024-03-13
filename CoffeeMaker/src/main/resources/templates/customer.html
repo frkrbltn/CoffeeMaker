@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="coffeeStatusApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Customer Order Status</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css/logIn.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<style>
+		.status-indicator {
+			background-color: #4CAF50;
+			/* Green background */
+			color: white;
+			padding: 40px;
+			text-align: center;
+			border-radius: 5px;
+			margin-top: -70px;
+		}
+
+		.status-pending {
+			background-color: rgb(255, 255, 0);
+			/* Green background */
+			color: black;
+			padding: 40px;
+			text-align: center;
+			border-radius: 5px;
+			margin-top: -70px;
+		}
+
+		.status-place {
+			background-color: rgb(128, 64, 0);
+			/* Green background */
+			color: rgb(255, 255, 255);
+			padding: 40px;
+			text-align: center;
+			border-radius: 5px;
+			margin-top: -70px;
+		}
+
+
+		.status-fetch {
+			background-color: rgb(128, 128, 128);
+			/* Green background */
+			color: black;
+			padding: 40px;
+			text-align: center;
+			border-radius: 5px;
+			margin-top: -70px;
+		}
+
+
+
+		.status-text {
+			font-size: 1.5em;
+			/* Increased font size for status */
+		}
+
+		.pickup-status-box {
+			background-color: #8B4513;
+			/* Brown background matching the header */
+			color: white;
+			padding: 15px;
+			/* Increased padding for larger box */
+			border-radius: 5px;
+			font-size: 1.5em;
+			/* Increased font size for pickup status */
+		}
+
+		.status-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 5 20px;
+			margin-top: 0 px;
+		}
+
+		.pickup-indicator {
+			background-color: #f2f2f2;
+			/* Light grey background */
+			color: #5c3a22;
+			padding: 10px;
+			text-align: center;
+			border-radius: 5px;
+			margin-top: 10px;
+		}
+
+		.default-button {
+			/* Existing styles */
+			position: fixed;
+			/* Fixed position relative to the viewport */
+			bottom: 20px;
+			/* 20px from the bottom */
+			left: calc(7px);
+			/* Adjusted to match the horizontal start of the status text */
+		}
+
+		.status-row {
+			/* Other styles remain unchanged */
+			padding-left: 20px;
+			/* Added padding to align with the button */
+		}
+
+		.make-coffee {
+			text-decoration: none;
+			background-color: #C65F00;
+			color: white;
+			font-size: 50px;
+			padding: 20px 70px;
+			border-radius: 600px;
+			margin-left: 100px;
+			-webkit-text-stroke: 1px black;
+		}
+	</style>
+</head>
+
+<body ng-controller="OrderStatusController as ctrl">
+	<div id="header" style="background-color: #5c3a22; color: white; text-align: center; padding: 20px;">
+		<h1>Coffee Maker</h1>
+		<h2 ng-model="customerName">Welcome {{customerName.firstName}} {{customerName.lastName}}</h2>
+	</div>
+
+	<div ng-class="{
+    'status-indicator': statusinfo === 'Order is ready!',
+    'status-pending': statusinfo === 'Order is in progress..',
+    'status-place': statusinfo === 'Place an Order!',
+    'status-fetch': statusinfo === 'Fetching Order Information...'
+		}">
+		<h3>Status: {{ statusinfo }}</h3>
+	</div>
+
+	<div class="status-row">
+		<h3 class="status-text"></h3>
+		<!-- This is now a button for picking up the order -->
+		<button ng-click="pickUp()" class="pickup-status-box">
+			<span>Pick Up Order</span>
+		</button>
+	</div>
+
+	<!-- The "Order Coffee" button is positioned at the bottom left -->
+	<a href="makecoffee.html" class="make-coffee">
+		Order Coffee
+	</a>
+
+	<script>
+		angular.module('coffeeStatusApp', [])
+			.controller('OrderStatusController', function ($scope, $http, $q) {
+				console.log("Hit!");
+				$scope.statusinfo = "Fetching Order Information...";
+
+				// gets customer info
+				$scope.getCustomer = function () {
+					$http.get("/customerName").then(function (response) {
+						$scope.customerName = response.data;
+						console.log($scope.customerName);
+						$scope.getOrders();
+
+					});
+				}
+
+				$scope.getCustomer();
+
+
+				// gets the orders from the customer
+				$scope.getOrders = function () {
+					$http.get("/customer/" + $scope.customerName.id + "/orders").then(function (response) {
+						$scope.customerOrders = response.data;
+						console.log($scope.customerOrders);
+						if ($scope.customerOrders.length == 0) {
+							$scope.statusinfo = "Place an Order!";
+						} else {
+							$scope.checkStatusInterval = setInterval($scope.checkOrder, 1000);
+
+						}
+					});
+				}
+
+
+
+				$scope.test = function () {
+					$console.log($scope.statusinfo);
+
+				}
+
+
+				// checks the status of an order or orders
+				$scope.checkOrder = function () {
+					console.log("checking Orders");
+
+					for (let i = 0; i < $scope.customerOrders.length; i++) {
+						console.log($scope.customerOrders[i].status);
+						if ($scope.customerOrders[i].status != "PICKED_UP") {
+							$scope.orderID = $scope.customerOrders[i].id;
+							console.log("current Order ", $scope.orderID);
+							break;
+						}
+					}
+
+					if ($scope.orderID == null) {
+						$scope.statusinfo = "Place an Order!";
+						clearInterval($scope.checkStatusInterval);
+						$http.get("/customerName").then(function (response) {
+							$scope.customerName = response.data;
+							console.log($scope.customerName);
+
+						});
+						return
+					}
+
+					$http.get("/customer/" + $scope.customerName.id + "/orders/" + $scope.orderID + "/pickup").then(function (response) {
+						$scope.status = response.data;
+						console.log($scope.status);
+
+						if ($scope.status.status == "COMPLETED") {
+							clearInterval($scope.checkStatusInterval);
+							$scope.statusinfo = "Order is ready!"
+						} else if ($scope.status.status == "PLACED") {
+							$scope.statusinfo = "Order is in progress..";
+						} else {
+							$scope.statusinfo = "Place an Order!";
+							clearInterval($scope.checkStatusInterval);
+						}
+					});
+
+
+
+				}
+
+				$scope.pickUp = function () {
+					$http.put("/customer/orders/" + $scope.orderID + "/pickup").then(
+						function (success) {
+							alert("Picked up");
+							$scope.checkOrder();
+						}, function (rejection) {
+							alert("FAILURE");
+						});
+				}
+
+
+
+			});
+		/*]]>*/
+	</script>
+</body>
+
+</html>

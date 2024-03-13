@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Add a Recipe</title>
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css\styles.css" />
+
+</head>
+
+
+
+<body>
+
+	<body>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+		<script>
+			/*<![CDATA[*/
+			var app = angular.module('myApp', []);
+			app.controller('fullfilCtrl', function ($scope, $http, $q) {
+				console.log("Hit!");
+				function getOrders() {
+					$http.get("/api/v1/orders/active").then(function (response) {
+						$scope.orders = response.data;
+					});
+				}
+
+				getOrders();
+
+
+				$scope.console = function () {
+					console.log($scope.orders[1].customer.firstName);
+					console.log($scope.selectedOrder);
+					
+				}
+				
+				$scope.completeOrder = function() {
+					$http.post("/barista/orders/fulfill/" + $scope.selectedOrder).then(
+					function (success) {
+						
+					}, function (rejection) {
+						alert("inventory ERROR has occured");
+						console.error("Error while fulfilling order");
+					});
+					
+					$http.put("/barista/orders/" + $scope.selectedOrder + "/status", 1).then(
+					function (success) {
+						alert("Order " + $scope.selectedOrder + " has been completed")
+					}, function (rejection) {
+						alert("order not fulfilled");
+						console.error("Error while fulfilling order");
+					});
+				
+				}
+				
+/*			$http.get("/api/v1/orders/active/size").then(function (response) {
+					$scope.size = response.data;
+			});
+*/
+
+
+
+			});
+		/*]]>*/
+		</script>
+	<div ng-app="myApp" ng-controller="fullfilCtrl as ctrl">
+		
+
+		<div id="header">
+			<h1>Coffee Maker</h1>
+		</div>
+
+		<div id="header2">
+			<h2>FulFill Orders</h2>
+		</div>
+
+
+	
+			
+	<div class="coffee-selection">
+		<!-- Radio buttons for recipes -->
+
+		<div class="radio-button-group" ng-repeat="order in orders">
+			<label class ="print-order">
+				<input type="radio" ng-model="$parent.selectedOrder" name="name" value="{{order.id}}" required="true" />
+				{{order.customer.firstName}} > Ordered: {{order.recipe.name}}
+			</label>
+			 <span class ="print-order">${{order.recipe.price}}</span>
+		</div>
+	</div>
+		
+
+	<div >
+		<label class = "ordsize">Total Orders: {{orders.length}}</label>					
+	</div>
+				
+				
+		
+			
+	<!-- Bottom buttons -->
+	<div class="bottom-buttons">
+		
+		
+		<input  type="submit" value="Complete" class="bottom-button submit-button" ng-disabled="fullfilForm.$invalid"
+							ng-click="completeOrder()" />
+		
+		<a href="/index" class="bottom-button home-button">Home</a>
+	</div>
+
+
+
+
+
+	</div>
+
+
+	</body>
+
+</html>

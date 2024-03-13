@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add an Ingredient</title>
+
+<style>
+	label {
+		width: 100%;
+	}
+	
+	button {
+		padding: 20px;
+	}
+	
+	a {
+		color: black;
+		text-decoration: none;
+	}
+	
+	#addBtn {
+		background-color: red;
+		color: white;
+	}
+</style>
+
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+<link rel="stylesheet" href="css\recipe.css" />
+
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script>
+		/*<![CDATA[*/
+			var app = angular.module('myApp', []);
+			app.controller('addIngredientCtrl', function($scope, $http, $q){
+				$scope.addIngredient = function(){
+					$scope.success = false;
+					$scope.failure = false;
+	
+					$http.put("/api/v1/inventory/single", $scope.ingredient).then(
+					function(success) {
+						$scope.success = true;
+						$scope.failure = false;
+						alert('✔️Ingredient successfully added!✔️' + $scope.ingredient.name + ": " + $scope.ingredient.amount);
+					}, function(rejection) {
+						console.error("Error while adding ingredient. Error: ", rejection);
+						alert("X Ingredient was not added X");
+					});
+						
+				}
+				
+				
+			
+			})	
+		/*]]>*/
+	</script>
+	
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="addIngredientCtrl as ctrl">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="lead">Add an Ingredient</span>
+			</div>
+
+			<div class="formcontainer">
+				<form name="addIngredientForm" class="form-horizontal">
+
+					<!-- Ingredient Name -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="name">Ingredient Name</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="ingredient.name" name="name" class="form-control input-sm"
+									placeholder="Enter ingredient name" required="true" />
+							</div>
+						</div>
+					</div>
+
+					<!-- Amount -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="amount">Amount</label>
+							<div class="col-md-7">
+								<input type="number" ng-model="ingredient.amount" name="amount" class="form-control input-sm"
+									placeholder="Enter amount" required="true" min="0" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="form-actions floatRight">
+							<button type="button" ng-click="addIngredient()" ng-disabled="addIngredientForm.$invalid" class="btn btn-primary btn-sm">Add to System</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<button><a href="/index" class="btn btn-select btn-sm">Return to Menu ←</a></button>
+		</div>
+	</div>
+
+
+		
+</body>
+</html>

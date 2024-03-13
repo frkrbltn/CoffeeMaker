@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Add a Recipe</title>
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css\logIn.css" />
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('signUpCtrl', function ($scope, $http, $q) {
+			console.log("Hit!");
+
+
+
+
+			$scope.reset = function () { // update this
+				$scope.user = {
+					firstName: '',
+					lastName: '',
+					username: '',
+					password: '',
+					enabled: 1,
+					role: 'CUSTOMER'
+
+				}
+				
+				if (undefined != $scope.signUpForm) {
+					$scope.signUpForm.$setPristine(); // reset Form
+				}
+			}
+
+
+
+
+
+			$scope.createAccount = function () {
+				$http.post("/api/v1/users", $scope.user).then(
+					function (success) {
+						alert("Your account has been successfully been created");
+
+					}, function (rejection) {
+						alert("There was an error while creating your account");
+						console.error("Error creating account");
+
+					});
+				$scope.reset()
+			}
+			$scope.console = function () {
+
+				console.log($scope.user)
+
+
+			}
+			$scope.reset();
+
+
+		});
+		/*]]>*/
+	</script>
+
+	<div id="header">
+		<h1>Coffee Maker</h1>
+	</div>
+
+
+	<div class="columns">
+
+
+		<div class="option-container" ng-app="myApp" ng-controller="signUpCtrl as ctrl">
+			<form name="signUpForm">
+				<h2>Sign Up</h2>
+				<div class="button-organizer">
+					<!-- name -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">First name</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="user.firstName" name="name" class="textbox"
+									placeholder="Enter first name" required="0" />
+							</div>
+						</div>
+					</div>
+
+					<!-- lastname -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Last name</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="user.lastName" name="lastname" class="textbox"
+									placeholder="Enter last name" required="0" />
+							</div>
+						</div>
+					</div>
+
+					<!-- username -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Username</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="user.username" name="username" class="textbox"
+									placeholder="Enter username" required="0" />
+							</div>
+						</div>
+					</div>
+
+
+					<!-- password -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file" align="center">Password</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="user.password" name="price" class="textbox"
+									placeholder="Enter password" required="true" min="0" />
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+				</div>
+
+
+				<div class="button-cont2">
+					<input type="submit" value="Create account" class="default-button" ng-click="createAccount()"
+						ng-disabled="signUpForm.$invalid" />
+					<!--<button type="button" ng-click="reset()" class="btn btn-warning btn-sm"
+								ng-disabled="logInForm.$pristine">Reset Form
+								<label class = "newsignup-page">Log In</label>
+							</button>-->
+					<button class="newsignup-page"><a href="/">Aleady User? Log In</a></button>
+				</div>
+
+			</form>
+
+		</div>
+
+
+
+
+
+</body>
+
+</html>

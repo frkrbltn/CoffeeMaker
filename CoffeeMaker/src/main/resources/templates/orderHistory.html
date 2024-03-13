@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Order History</title>
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css\styles.css" />
+
+</head>
+
+
+
+<body>
+	
+	<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('orderHistoryCtrl', function ($scope, $http, $q) {
+			console.log("Hit!");
+
+			
+			function getCompletedandPickedup() {
+				$http.get("api/v1/orders/CompletedandPickedup").then(function (response) {
+					$scope.CPOrders = response.data;
+				});
+			}
+			
+			getCompletedandPickedup();
+			
+	
+		});
+		/*]]>*/
+	</script>
+
+	<div id="header">
+		<h1>Coffee Maker</h1>
+	</div>
+	
+	<div id="header2">
+		<h2>Order History</h2>
+	</div>
+
+
+	
+
+	<div  ng-app="myApp" ng-controller="orderHistoryCtrl as ctrl">
+			
+		<div class="columns">
+		
+			
+			<div class = "tabletitle">
+				<label>Customer</label>
+				<label>Recipe</label>
+				<label>Status</label>
+			</div>
+			
+			
+			<div ng-repeat="orders in CPOrders track by $index">
+				<div class = "listOrders">
+					<label>{{orders.customer.firstName}}</label>
+					<label>{{orders.recipe.name}}</label>
+					<label>{{orders.status}}</label>
+				</div>
+			</div>
+						
+
+			<div >
+				<label class = "ordsize">Total Orders: {{CPOrders.length}}</label>					
+			</div>
+				
+				
+		</div>
+			
+	</div>
+		
+		<div class="bottom-buttons">
+		<a href="/index" class="bottom-button home-button">Home</a>
+	</div>
+
+
+
+
+
+</body>
+
+</html>

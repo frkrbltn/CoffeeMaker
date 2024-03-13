@@ -1,0 +1,386 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Edit Recipe</title>
+<style>
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: red;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+
+</style>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+<link rel="stylesheet" href="css\recipe.css" />
+
+</head>
+<body>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('addRecipeCtrl', function ($scope, $http, $q) {
+			console.log("Hit!");
+
+			$http.get("/api/v1/recipes").then(function (response) {
+	  			$scope.recipes = response.data;
+	  		});
+	  		
+	  		
+	  		
+	  		
+			$scope.addIngredient = function () {
+				$scope.selectedRecipe.ingredients.push({});
+				console.log($scope.selectedRecipe.ingredients)
+			}
+
+			$scope.removeIngredient = function (index) {
+				$scope.selectedRecipe.ingredients.splice(index, 1);
+			}
+
+			$scope.reset = function () { // update this
+				$scope.selectedRecipe = '';
+				if (undefined != $scope.addRecipeForm) {
+					$scope.addRecipeForm.$setPristine(); // reset Form
+				}
+			}
+
+			$scope.submit = function () {
+				$scope.editRecipe();
+
+				$scope.reset();
+			}
+			
+			
+
+			$scope.editRecipe = function () {
+				$scope.success = false;
+				$scope.failure = false;
+
+				$http.put("/api/v1/recipes", $scope.selectedRecipe).then(
+					function (success) {
+						$scope.success = true;
+						
+												
+					}, function (rejection) {
+						console.error("Error while adding recipe");
+					});
+			}
+
+			$scope.reset();
+			
+
+
+			
+			$http.get("/api/v1/ingredients").then(function (response) {
+				$scope.allIngredients = [];
+				for (let i = 0; i < response.data.length; i++) {
+					
+					$scope.allIngredients.push(response.data[i].name);
+				}
+				console.log($scope.allIngredients);
+
+			});
+			
+			$http.get("/api/v1/inventory").then(function (response) {
+				$scope.allIngredients = response.data.ingredients;
+
+			});
+
+		
+
+		});
+		/*]]>*/
+	</script>
+	
+	
+
+
+
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="addRecipeCtrl as ctrl">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="lead">Edit a Recipe</span>
+			</div>
+
+			<div class="formcontainer">
+				
+				
+				<form ng-submit="submit()" name="addRecipeForm" class="form-horizontal">
+
+					
+					<!-- Recipe select -->
+					<h2 style="font-size: 20px;">Select Recipe</h2>
+					
+										<!-- Recipe Name -->
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Name</label>
+							<div class="col-md-7">
+								<select ng-model="selectedRecipe" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:20%;">
+								<option value="">Select a Recipe</option>
+							    <option ng-repeat="recipe in recipes" ng-value="{{recipe}}" >{{recipe.name}}</option>
+							    </select>
+								
+							</div>
+						</div>
+					</div>
+					
+					
+						
+												
+						
+						
+						<!--<select ng-model="selectedRecipe" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:20%;">
+								<option value="">Select a Recipe</option>
+							<option ng-repeat="recipe in recipes" ng-value="{{recipe}}" >{{recipe.name}}</option>-->
+								
+																
+						
+						
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Price</label>
+							<div class="col-md-7">
+								<input type="number" ng-model="selectedRecipe.price" name="price"
+									class="price form-control input-sm" placeholder="Enter recipe price" required="true"
+									min="0" />
+								<div class="has-error" ng-show="addRecipeForm.$dirty">
+									<span ng-show="addRecipeForm.price.$error.required">This
+										is a required field</span> <span
+										ng-show="addRecipeForm.price.$error.min">Minimum amount
+										is 0</span> <span ng-show="addRecipeForm.price.$invalid">This
+										field is invalid </span>
+								</div>
+							</div>
+						</div>
+					</div>
+						
+						
+																	
+						
+						
+					<!--<div ng-repeat="ingredients in recipe.ingredients track by $index">
+						 fix css later 
+						<div style="display: flex;">
+							<select ng-model="recipe.ingredients[$index].name"
+								ng-options="item as item for item in allIngredients" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:33%;">
+								<option value="">Select something</option>
+							</select>
+
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<input type="number" ng-model="recipe.ingredients[$index].amount" required="true"
+										name="amount-{{$index}}" class="form-control input-sm"
+										placeholder="Enter amount of ingredient"
+										min="0" />
+										
+
+								</div>
+							</div>
+
+							<button type="button" ng-click="removeIngredient($index)" class="btn btn-select btn-sm"
+								style="height: 100%;">
+								Remove Ingredient
+							</button>
+
+						</div>
+					</div>-->
+					<!-- Recipe select end-->
+					
+					<br />
+
+					<h2 style="font-size: 20px;">List Ingredients</h2>
+					
+					
+
+					<div ng-repeat="ingredients in selectedRecipe.ingredients track by $index">
+		
+						<div style="display: flex;">
+							
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<input type="text" ng-model="selectedRecipe.ingredients[$index].name" required="true"
+										class="form-control input-sm"
+										placeholder="Enter ingredient name"
+										 /> 
+							<!--<select ng-model="recipe.ingredients[$index].name"
+								ng-options="item as item for item in allIngredients" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:33%;">
+								<option value="">Select something</option>
+								
+								
+							<select ng-model="selectedRecipe" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:20%;">
+								<option value="">Select a Recipe</option>
+							<option ng-repeat="ingredient in allIngredients" ng-value="{{ingredient}}" >{{ingredient.name}}</option>-->
+							</select>
+								</div>
+							</div>
+							
+							
+						<!--	<label class="form-control" style="padding: 0 5px; color: #555; width:33%; font-size: 20px">
+								{{selectedRecipe.ingredients[$index].name}}</label>
+								
+							<select ng-model="selectedRecipe.ingredients[$index].name"
+								ng-options="item as item for item in selectedRecipe.ingredients" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:33%;">
+								<option value="">Select something</option>
+							</select>
+							
+							-->
+ 
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<input type="number" ng-model="selectedRecipe.ingredients[$index].amount" required="true"
+										name="amount-{{$index}}" class="form-control input-sm"
+										placeholder="Enter amount of ingredient"
+										min="0" />
+										
+
+								</div>
+							</div>
+
+							<button type="button" ng-click="removeIngredient($index)" class="btn btn-select btn-sm"
+								style="height: 100%;">
+								Remove Ingredient
+							</button>
+
+						</div>
+					</div>
+
+					<div class="row" style="margin-left: 0px;">
+
+						<button type="button" ng-click="addIngredient()" class="btn btn-select btn-sm ">
+							Add Ingredient
+						</button>
+					</div>
+					
+					
+				<!--	<div ng-repeat="ingredients in selectedRecipe.ingredients track by $index">
+						 fix css later 
+						<div style="display: flex;">
+							
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<select ng-model="selectedRecipe.ingredients[$index].name"
+										ng-options="item as item for item in allIngredients" required="true"
+										class="form-control" style="padding: 0 5px; color: #555; width:33%;">
+										<option value="">Select something</option>
+									</select>
+								</div>
+							</div>
+							
+							
+							<label class="form-control" style="padding: 0 5px; color: #555; width:33%; font-size: 20px">
+								{{selectedRecipe.ingredients[$index].name}}</label>
+								
+							<select ng-model="selectedRecipe.ingredients[$index].name"
+								ng-options="item as item for item in selectedRecipe.ingredients" required="true"
+								class="form-control" style="padding: 0 5px; color: #555; width:33%;">
+								<option value="">Select something</option>
+							</select>
+ 
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<input type="number" ng-model="selectedRecipe.ingredients[$index].amount" required="true"
+										name="amount-{{$index}}" class="form-control input-sm"
+										placeholder="Enter amount of ingredient"
+										min="0" />
+										
+
+								</div>
+							</div>
+
+							<button type="button" ng-click="removeIngredient($index)" class="btn btn-select btn-sm"
+								style="height: 100%;">
+								Remove Ingredient
+							</button>
+
+						</div>
+					</div>
+
+					<div class="row" style="margin-left: 0px;">
+
+						<button type="button" ng-click="addIngredient()" class="btn btn-select btn-sm ">
+							Add Ingredient
+						</button>
+					</div>-->
+					
+						
+						
+						
+					<!--	<div style="display: flex;">
+							
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<select ng-model="selectedRecipe.ingredients[$index].name"
+										ng-options="item as item for item in allIngredients" required="true"
+										class="form-control" style="padding: 0 5px; color: #555; width:33%;">
+										<option value="">Select something</option>
+									</select>
+								</div>
+							</div>
+							
+							
+ 
+							<div class="form-group col-md-12" style="width: 33%;">
+								<div class="col-md-7" style="width: 100%;">
+									<input type="number" ng-model="selectedRecipe.ingredients[$index].amount" required="true"
+										name="amount-{{$index}}" class="form-control input-sm"
+										placeholder="Enter amount of ingredient"
+										min="0" />
+										
+									
+								</div>
+							</div>
+
+						
+						
+					<div class="row" style="margin-left: 0px;">
+
+						<button type="button" ng-click="addIngredient()" class="btn btn-select btn-sm ">
+							Add Ingredient
+						</button>
+					</div>-->
+				
+					
+					
+
+
+					<div class="row">
+						<div class="form-actions floatRight">
+							<input type="submit" value="Submit" class="btn btn-primary btn-sm"
+								ng-disabled="addRecipeForm.$invalid" />
+							<button type="button" ng-click="reset()" class="btn btn-warning btn-sm"
+								ng-disabled="addRecipeForm.$pristine">Reset Form
+							</button>
+						</div>
+					</div>
+				
+			
+			<div ng-show="success">Recipe Edited</div>
+			<div ng-show="failure">Error while editing recipe.</div>
+		</div>
+	</form>
+</div>
+		
+	
+	<button><a href="/index">Return to Menu ←</a></button>
+</div>
+
+</body>
+</html>

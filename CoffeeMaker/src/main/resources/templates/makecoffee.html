@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Order Your Coffee</title>
+
+	<link rel="stylesheet" href="css/app.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<style>
+		body {
+			margin: 0;
+			font-family: sans-serif !important;
+			background-color: #ffecde;
+		}
+
+		#header {
+			background-color: #67380d;
+			color: white;
+			text-align: center;
+			padding: 40px 0;
+			margin-bottom: 4rem;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 80px;
+			-webkit-text-stroke: 1px black;
+		}
+
+		.container,
+		.formcontainer {
+			max-width: 700px;
+			margin: auto;
+			background-color: #f2c59b;
+			padding: 20px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			border-radius: 8px;
+			border: 1px solid black;
+		}
+
+		.order-coffee-header {
+			background-color: rgb(198, 95, 22);
+			/* Dark orange background */
+			color: white;
+			text-align: center;
+			padding: 20px;
+			border-radius: 5px;
+			margin-top: -4rem;
+			/* Adjusted to place it right below the header */
+			margin-bottom: 20px;
+		}
+
+		.coffee-selection {
+			padding: 10px;
+			border-radius: 8px;
+			margin-bottom: 20px;
+		}
+
+		.radio-button-group {
+			display: flex;
+			align-items: center;
+			margin: 10px 0;
+		}
+
+		.radio-button-group label {
+			flex-grow: 1;
+			margin-right: 10px;
+		}
+
+		.payment-section {
+			display: flex;
+			align-items: center;
+			margin-top: 20px;
+		}
+
+		.payment-input {
+			flex-grow: 0;
+			/* Prevents the input box from growing to fill the space */
+			margin-right: 20px;
+			/* Space between the label and input */
+			width: 15px;
+			/* Adjust the width as per your requirement */
+		}
+
+		.bottom-buttons {
+			display: flex;
+			justify-content: flex-end;
+			/* Aligns buttons to the right */
+			margin-top: 20px;
+		}
+
+		.bottom-button {
+			padding: 10px 20px;
+			border: none;
+			color: white;
+			border-radius: 20px;
+			cursor: pointer;
+			font-size: 20px;
+		}
+
+		.home-button {
+			background-color: brown;
+			
+			/* Small distance between the Home and Submit buttons */
+		}
+
+		.submit-button {
+			background-color: red;
+			margin-right: 10px;
+		}
+
+		.payment-label {
+			font-size: 20px;
+			/* Increased font size for the payment label */
+			margin-right: 10px;
+			/* Space between the label and input field */
+		}
+
+		/* Adjusted the Payment input field to align with the increased label size */
+		.payment-section label {
+			align-self: flex-end;
+			margin-bottom: 10px;
+		}
+
+		.input-field {
+			width: 250px;
+			/* Increased width of the payment input field */
+			padding: 10px;
+			border: 1px solid #d0c4af;
+			border-radius: 4px;
+			margin-right: 20px;
+			/* Space between the label and input */
+			background-color: rgb(248, 173, 119);
+			font-size: 16px;
+
+		}
+
+		.alert {
+			padding: 20px;
+			margin-bottom: 20px;
+			border: 1px solid transparent;
+			border-radius: 4px;
+			text-align: center;
+		}
+
+		.alert-error {
+			color: #721c24;
+			background-color: #f8d7da;
+			border-color: #f5c6cb;
+		}
+
+		.alert-success {
+			color: #155724;
+			background-color: #d4edda;
+			border-color: #c3e6cb;
+		}
+		
+		.print-recipe{
+			 font-size: 25px;
+			 width: 50%;
+			 margin-bottom: 4Px;
+			 padding-left: 10px;
+		}
+		
+		h2 {
+	margin: 0;
+	font-size: 64px;
+	-webkit-text-stroke: 1px black;
+}
+
+	</style>
+</head>
+
+<body ng-controller="recipesCtrl">
+	<div id="header">
+		<h1>Coffee Maker</h1>
+	</div>
+
+	<div class="order-coffee-header">
+		<h2>Order Coffee</h2>
+	</div>
+
+	<div class="coffee-selection">
+		<!-- Radio buttons for recipes -->
+		<div class="radio-button-group" ng-repeat="recipe in recipes">
+			<label class ="print-recipe">
+				<input type="radio" name="coffee" ng-model="$parent.selectedRecipe" ng-value="recipe" />
+				{{ recipe.name }}
+			</label>
+			 <span class ="print-recipe">${{ recipe.price }}</span>
+		</div>
+	</div>
+
+	<!-- Payment section -->
+	<div class="payment-section">
+		<label for="paymentAmount" class="payment-label">Payment:</label>
+		<input id="paymentAmount" type="number" class="input-field payment-input" placeholder="Enter Payment Amount"
+			ng-model="paymentAmount" min="0.01" required  oninvalid="alert('Please Enter Valid Payment')"
+/>
+	</div>
+	
+	<div style="font-size: 20px; color: #721c24;">{{userMessage}}</div>
+
+
+	<!-- Bottom buttons -->
+	<div class="bottom-buttons">
+		
+		<button class="bottom-button submit-button" ng-disabled="!selectedRecipe "
+			ng-click="submitOrder()">
+			Submit
+		</button>
+		
+		<a href="/index" class="bottom-button home-button">Home</a>
+	</div>
+
+	<script>
+		var app = angular.module("myApp", []);
+		app.controller("recipesCtrl", function ($scope, $http) {
+			$scope.selectedRecipe = null;
+			$scope.errorMessage = "";
+			$scope.confirmationMessage = "";
+			$scope.userMessage = "";
+
+
+			$scope.fetchRecipes = function () {
+				$http.get("/api/v1/recipes").then(
+					function (response) {
+						$scope.recipes = response.data;
+					},
+					function (error) {
+						$scope.userMessage =
+							"Error fetching recipes. Please try again later.";
+					}
+				);
+			};
+
+			$scope.selectRecipe = function (recipe) {
+				if ($scope.selectedRecipe === recipe) {
+					$scope.selectedRecipe = null;
+				} else {
+					$scope.selectedRecipe = recipe;
+				}
+				$scope.userMessage = "";
+
+			};
+
+			$scope.submissionSuccess = false;
+			$scope.submissionFailure = false;
+			$scope.change = "";
+			
+			
+			
+				
+
+			$scope.submitOrder = function () {
+
+				if ($scope.paymentAmount <= 0) {
+					$scope.userMessage = "The amount must be greater than $0.";
+					$scope.submissionFailure = true;
+					return;
+				}
+
+				if ($scope.paymentAmount < $scope.selectedRecipe.price) {
+					$scope.userMessage =
+						"Your payment does not cover the cost of the coffee.";
+					$scope.submissionFailure = true;
+					return;
+				}         
+
+				$http.post("/customer/order/"+ $scope.selectedRecipe.name).then(
+						function (response) {
+							
+							$scope.change = $scope.paymentAmount-(response.data.recipe.price);
+							$scope.submissionSuccess = true;
+							$scope.userMessage =
+								"Coffee ordered successfully. Your change is " +
+								$scope.change;
+							$scope.submissionFailure = false;
+							console.log($scope.confirmationMessage)
+						},
+						function (error) {
+							console.log(error);
+							$scope.userMessage =
+								"Error submitting order. Please try again.";
+							$scope.submissionFailure = true;
+							$scope.submissionSuccess = false;
+							alert($scope.errorMessage);
+							console.log($scope.errorMessage)
+						}
+					);
+
+			};
+			$scope.console = function () {
+				console.log($scope.paymentAmount)
+				console.log($scope.selectedRecipe.name)
+			}
+			$scope.fetchRecipes();
+		});
+	</script>
+</body>
+
+</html>

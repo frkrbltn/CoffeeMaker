@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Welcome to the CSC326 CoffeeMaker</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<style>
+		body {
+			margin: 0;
+			font-family: sans-serif !important;
+			background-color: #FFECDE;
+		}
+
+		#header {
+			background-color: #67380D;
+			color: white;
+			text-align: center;
+			padding: 40px 0;
+			margin-bottom: 4rem;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 80px;
+			-webkit-text-stroke: 1px black;
+		}
+
+		h2 {
+			color: white;
+			text-align: center;
+			font-size: 50px;
+			-webkit-text-stroke: 1px black;
+			margin: 0 0 1.5rem;
+		}
+
+		.columns {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			margin: 0 8px;
+		}
+
+		.left-col {
+			width: 68%;
+			text-align: center;
+		}
+
+		.right-col {
+			width: 28%;
+			display: inline-block;
+			text-align: center;
+		}
+
+		.make-coffee {
+			text-decoration: none;
+			background-color: #C65F00;
+			color: white;
+			font-size: 50px;
+			padding: 20px 70px;
+			border-radius: 600px;
+			-webkit-text-stroke: 1px black;
+		}
+
+		.left-col .option-container {
+			margin: 45px 0 0 0;
+		}
+
+		.option-container {
+
+			background-color: #F2C59B;
+			padding: 30px;
+			border-radius: 20px;
+			border: 1px solid black;
+		}
+
+		.Inv-button-organizer {
+			display: flex;
+
+
+			flex-direction: column;
+			justify-content: space-evenly;
+			row-gap: 20px;
+			column-gap: 30px;
+			margin-bottom: 2rem;
+
+		}
+
+		.button-organizer {
+			display: flex;
+			width: 100%;
+			flex-direction: row;
+			justify-content: space-between;
+			margin-bottom: 1rem;
+		}
+
+		.default-button {
+			background-color: #67380D;
+			color: white;
+			text-decoration: none;
+			border-radius: 10px;
+			padding: 20px 50px;
+			text-align: center;
+			font-size: 1.4rem;
+		}
+
+		.ingredient-preview {
+			background-color: #FFEBD9;
+			color: black;
+			border-radius: 10px;
+			margin-top: 10px;
+			min-height: 100px;
+			padding-bottom: 5px;
+
+		}
+
+		.ingredient-preview h3 {
+			color: #67380D;
+			font-size: 30px;
+		}
+
+		.bullet-list {
+			text-align: left;
+			margin: 5px;
+		}
+
+		.bullet-list p {
+			margin: 2px 0;
+		}
+	</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('managementCtrl', function ($scope, $http, $q) {
+			console.log("Hit!");
+
+			
+			
+
+
+		});
+		/*]]>*/
+	</script>
+	<div id="header">
+		<h1>Coffee Maker</h1>
+	</div>
+
+
+	<div class="columns" ng-app="myApp" ng-controller="managementCtrl as ctrl">
+		<div class="left-col">
+			<a class="make-coffee" href="makecoffee.html">Make Coffee</a>
+
+			<div class="option-container">
+				<h2>Recipe</h2>
+
+				<div class="button-organizer">
+					<a class="default-button" href="recipe.html">Add a Recipe</a>
+					<a class="default-button" href="editrecipe.html">Edit Recipe</a>
+					<a class="default-button" href="deleterecipe.html">Delete Recipe</a>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="right-col">
+			<div class="option-container">
+				<h2>Operations</h2>
+				<div class="Inv-button-organizer">
+					<a class="default-button" href="fulfill.html">Fulfill Orders</a>
+					<a class="default-button" href="inventory.html">Add Inventory</a>
+					<a class="default-button" href="addingredient.html">Add Ingredient</a>
+					<a class="default-button" href="orderHistory.html">Order History</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

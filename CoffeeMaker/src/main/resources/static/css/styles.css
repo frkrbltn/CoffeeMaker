@@ -1,0 +1,140 @@
+
+
+body {
+	margin: 0;
+	font-family: sans-serif !important;
+	background-color: #FFECDE;
+}
+
+#header {
+	background-color: #67380D;
+	color: white;
+	text-align: center;
+	padding: 40px 0;
+
+}
+
+#header2 {
+	background-color: #C65F00;
+	color: white;
+	text-align: center;
+	padding: 10px 0;
+	margin-bottom: 4rem;
+}
+
+h1 {
+	margin: 0;
+	font-size: 80px;
+	-webkit-text-stroke: 1px black;
+}
+
+h2 {
+	margin: 0;
+	font-size: 64px;
+	-webkit-text-stroke: 1px black;
+}
+
+
+.listOrders {
+ display: flex;
+ flex-direction: row;
+ justify-content: space-around;
+ background-color: #D44315;
+ border-width:1px;
+ border-style:solid;
+ border-radius: 166px;
+ border-color:rgb(0, 0, 0);
+ font-size: 25px;
+ color: floralwhite;
+ width: 50%;
+ margin-bottom: 4Px;
+ padding-left: 25px;
+ margin-left: 25px;
+  	
+}
+
+.tabletitle {
+ display: flex;
+ flex-direction: row;
+ justify-content: space-around;
+ background-color: rgb(0, 0, 0);
+ border-width:1px;
+ border-style:solid;
+ border-radius: 166px;
+ border-color:rgb(0, 0, 0);
+ font-size: 25px;
+ color: floralwhite;
+ width: 50%;
+ margin-bottom: 4Px;
+ padding-left: 25px;
+ margin-left: 25px;
+	
+}
+
+
+
+.ordsize {
+	margin-top: 4rem;
+	font-size: large;
+	margin-left: 25px;
+	font-size: 25px;
+}
+
+
+.bottom-buttons {
+	display: flex;
+	justify-content: flex-end;
+	/* Aligns buttons to the right */
+	margin-top: 20px;
+}
+
+.bottom-button {
+	padding: 10px 20px;
+	border: none;
+	color: white;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.home-button {
+	background-color: brown;
+	
+	/* Small distance between the Home and Submit buttons */
+}
+
+.submit-button {
+	background-color: red;
+	margin-right: 10px;
+}
+
+.print-order{
+	 font-size: 20px;
+	 width: 50%;
+	 margin-bottom: 4Px;
+	 padding-left: 10px;
+}
+
+
+
+.form-group{
+	font-size: medium;
+    display: flex;
+    column-gap: 50px;
+    flex-direction:row;
+    padding-right: 2px;
+}
+
+
+.coffee-selection {
+	padding: 10px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+}
+
+.radio-button-group {
+	display: flex;
+	flex-grow: 1;
+	align-items: center;
+	margin: 10px 0;
+}
